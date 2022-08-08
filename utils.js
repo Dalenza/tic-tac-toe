@@ -1,5 +1,24 @@
-import _ from "lodash";
-import fs from "fs";
+// import _ from "lodash";
+// import fs from "fs";
+const winningConfigs = ["123", "456", "789", "147", "258", "369", "159", "357"];
+function checkForWin(arr, winConfig) {
+  const n = arr.length;
+  for (let i = 0; i < n - 2; i++) {
+    let sub = arr[i];
+    for (let k = i + 1; k < n - 1; k++) {
+      sub = arr[i] + arr[k];
+      for (let j = k + 1; j < n; j++) {
+        sub += arr[j];
+        if (sub === winConfig) {
+          return true;
+        }
+        sub = arr[i] + arr[k];
+      }
+    }
+    sub = arr[i];
+  }
+  return false;
+}
 
 function countOccurences(substr, str) {
   let counter = 0;
@@ -31,7 +50,24 @@ function generateChildren(parent) {
 }
 
 function isFinalState(node) {
-  return countOccurences("0", node.state) === 0 ? true : false;
+  let arrX = [];
+  let arrO = [];
+  for (let i = 0; i < node.state.length; i++) {
+    if (node.state[i] == "1") {
+      arrX.push(String(i + 1));
+    } else if (node.state[i] == "2") {
+      arrO.push(String(i + 1));
+    }
+  }
+  for (let win of winningConfigs) {
+    if (checkForWin(arrX, win)) {
+      return true;
+    }
+    if (checkForWin(arrO, win)) {
+      return true;
+    }
+  }
+  return false;
 }
 
 function generateGameTree(root, depth = 10) {
@@ -72,6 +108,19 @@ class gameNode {
     this.turn = turn;
   }
 }
+// const node = new gameNode(
+//   5,
+//   ["1", "1", "1", "2", "2", "0", "0", "0", "0"],
+//   null,
+//   "2"
+// );
+// const node2 = new gameNode(
+//   6,
+//   ["1", "0", "0", "2", "2", "0", "1", "2", "1"],
+//   null,
+//   "2"
+// );
+// console.log(isFinalState(node2));
 
 const root = new gameNode(
   0,
@@ -84,5 +133,7 @@ const root = new gameNode(
 
 const exports = {
   countOccurences,
+  checkForWin,
+  winningConfigs,
 };
 export default exports;

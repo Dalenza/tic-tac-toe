@@ -1,27 +1,4 @@
-// import utils from "./utils.js";
-// console.log(utils);
-function checkForWin(arr, winConfig) {
-  // arr = [1,2,3,4]
-  // generateCombos
-  // while(i < n-2)
-  // for(j = i+1 ; j < i+3)
-  const n = arr.length;
-  for (let i = 0; i < n - 2; i++) {
-    let sub = arr[i];
-    for (let k = i + 1; k < n - 1; k++) {
-      sub = arr[i] + arr[k];
-      for (let j = k + 1; j < n; j++) {
-        sub += arr[j];
-        if (sub === winConfig) {
-          return true;
-        }
-        sub = arr[i] + arr[k];
-      }
-    }
-    sub = arr[i];
-  }
-  return false;
-}
+import utils from "./utils.js";
 
 function resetGame() {
   const resetBtn = document.querySelector(".btn--reset");
@@ -42,7 +19,7 @@ function resetGame() {
   });
 }
 
-const winningConfigs = ["123", "456", "789", "147", "258", "369", "159", "357"];
+const winningConfigs = utils.winningConfigs;
 
 let gameState = {
   counter: 0,
@@ -56,12 +33,7 @@ let gameState = {
 };
 
 let winMsg;
-const tieMsg = "tie";
-
-//fillCell
-//updateGameState
-//resetGameState
-//checkGameState
+const tieMsg = "draw";
 
 function fillCell(cell) {
   if (!cell.innerHTML) {
@@ -108,14 +80,14 @@ function checkGameState() {
   const arrX = gameState.playerX.plays.sort((a, b) => a - b);
   const arrO = gameState.playerO.plays.sort((a, b) => a - b);
   for (let win of winningConfigs) {
-    if (checkForWin(arrX, win)) {
+    if (utils.checkForWin(arrX, win)) {
       overlay.classList.remove("is-hidden");
       msg.classList.remove("is-hidden");
       winMsg = "player X won the game";
       msg.append(winMsg);
       return;
     }
-    if (checkForWin(arrO, win)) {
+    if (utils.checkForWin(arrO, win)) {
       overlay.classList.remove("is-hidden");
       msg.classList.remove("is-hidden");
       winMsg = "player O won the game";
